@@ -2,11 +2,11 @@ doctype html
 html
   head
     title= title
+    link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans&amp;subset=latin')
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     .container
       .header
         h3 STANDARD AUTOMATA
-      .jumbotron
-        h1 hello
-    block content
+      block content
+      include footer
