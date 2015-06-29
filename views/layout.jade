@@ -4,10 +4,12 @@ html
     title= title
     link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans&amp;subset=latin')
     link(rel='stylesheet', href='/css/style.css')
+  link(rel='stylesheet', href='/css/font-awesome.min.css')
   body
-    .container
-      .header
-        h3 STANDARD AUTOMATA
-      block content
-      include footer
-      script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js')
+    include navbar
+    block content
+    include footer
+    include modals
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js')
+    script(src='/js/bootstrap.min.js')
+    script(src='/js/main.js')

@@ -21,8 +21,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 var bootstrapPath = path.join(__dirname, 'node_modules', 'bootstrap');
+var faPath = path.join(__dirname, 'node_modules', 'font-awesome')
 app.use('/fonts', express.static(path.join(bootstrapPath, 'dist','fonts')));
+app.use('/fonts', express.static(path.join(faPath, 'fonts')));
 app.use('/js', express.static(path.join(bootstrapPath, 'dist', 'js')));
+app.use('/css', express.static(path.join(faPath, 'css')));
+
 app.use(require('less-middleware')(path.join(__dirname, 'public'), {
     dest: path.join(__dirname, 'public'),
     parser: {

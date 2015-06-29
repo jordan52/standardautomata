@@ -1,5 +1,29 @@
 extends layout
 
 block content
-  .jumbotron
-    h1 hello
+  main.sa-masthead
+    h1 Robot Rentals in St. Louis, Missouri
+    p.
+      We believe robots are the future. Let us help you understand and implement robotic
+      solutions to rocket you through the singularity.
+    .line
+      form.form-inline
+        .form-group
+          div.input-group.margin-bottom-sm
+            div.input-group-addon <i class="fa fa-envelope-o fa-fw"></i>
+            input.form-control(type="text", placeholder="your email address")
+          button.btn.btn-primary(type="button", data-toggle="popover", data-trigger="hover", title="Subscribe!" data-content="We'll send you updates on SA releases and other things we're working on.") subscribe
+  .container.sa-feature.sa-thin-bottom-border
+    h1 no need to buy
+    p.
+      Robots help you get a lot of things done quicky, but they're expensive to buy and hard to get right. Let us
+      mitigate the risks for you.
+  .container.sa-feature.sa-thin-bottom-border
+    h1 manage your automata
+    p.
+      SA provides deep analytics and efficient visualizations to keep your automata running efficiently.
+  .container.sa-feature
+    h1 work better
+    p.
+      People say you can only chose two between fast, cheap, and good. Robots rented from Standard Automata give you
+      all three.

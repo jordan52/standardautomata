@@ -1,0 +1,17 @@
+
+.modal.fade(id="login-modal", tabindex="-1", role="dialog", aria-labelledby="login-modal-label")
+  .modal-dialog(role="document")
+    .modal-content
+      .modal-header
+        button(type="button", class="close", data-dismiss="modal", aria-label="Close")
+          span(aria-hidden="true" ) &times;
+        h4.modal-title(id="login-modal-label") login
+      .modal-body.sa-modal-body
+        .input-group
+          input.form-control(placeholder='username')
+        .input-group
+          input.form-control(placeholder='password')
+        .input-group
+          button.btn.btn-primary(type="button", id='login-submit') login
+          a(href='signup') signup
+      .modal-footer
