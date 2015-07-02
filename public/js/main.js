@@ -5,6 +5,7 @@ $(function () {
     var scene, camera, renderer;
     var geometry, material, mesh;
     var container, stats;
+    var composer;
 
     var mouse = [.5, .5];
     zoom = 1000;
@@ -19,15 +20,50 @@ $(function () {
         camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
         camera.position.z = 1000;
 
+        var light = new THREE.DirectionalLight( 0xffffff );
+        light.position.set( 0, 1, 1 ).normalize();
+        scene.add(light);
 
-        geometry = new THREE.BoxGeometry( 200, 200, 200 );
-        material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } );
 
+        geometry = new THREE.BoxGeometry( 200, 200, 200 , 1, 1, 1);
+        material = new THREE.MeshLambertMaterial( { map: THREE.ImageUtils.loadTexture( "img/sinkSquare1024x1024.png" ) });
         mesh = new THREE.Mesh( geometry, material );
         scene.add( mesh );
 
+        //backGeo = new THREE.BoxGeometry( 1000, 1000, 1, 1, 1, 1);
+        //backMat = new THREE.MeshLambertMaterial( { map: THREE.ImageUtils.loadTexture( "img/bathroomSquare2048x2048.png" ) });
+        //backMesh = new THREE.Mesh (backGeo, backMat)
+        //scene.add(backMesh)
+
+        var sphere = new THREE.Mesh(
+            new THREE.SphereGeometry(3000, 64, 64),
+            new THREE.MeshBasicMaterial({
+                map: THREE.ImageUtils.loadTexture('img/bathroomSquare2048x2048.png')
+            })
+        );
+        sphere.scale.x = -1;
+        var axis = new THREE.Vector3(0.0,1.0,0);
+        sphere.rotateOnAxis(axis, -1.57);
+        scene.add(sphere);
+
+
+        //scene.fog = new THREE.FogExp2( '#FF0000', 0.0002 );
+
         renderer = new THREE.WebGLRenderer();
         renderer.setSize( window.innerWidth, window.innerHeight );
+
+        composer = new THREE.EffectComposer( renderer );
+        composer.addPass( new THREE.RenderPass( scene, camera ) );
+
+        //var effect = new THREE.ShaderPass( THREE.DotScreenShader );
+        //effect.uniforms[ 'scale' ].value = 99;
+        //composer.addPass( effect );
+
+        var effect = new THREE.ShaderPass( THREE.RGBShiftShader );
+        effect.uniforms[ 'amount' ].value = 0.0015;
+        effect.renderToScreen = true;
+        composer.addPass( effect );
+
 
         container.appendChild( renderer.domElement );
 
@@ -62,7 +98,8 @@ $(function () {
         mesh.rotation.x += 0.01;
         mesh.rotation.y += 0.02;
 
-        renderer.render( scene, camera );
+        //renderer.render( scene, camera );
+        composer.render();
         stats.update();
 
     }
