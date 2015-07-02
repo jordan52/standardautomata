@@ -21,10 +21,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 var bootstrapPath = path.join(__dirname, 'node_modules', 'bootstrap');
-var faPath = path.join(__dirname, 'node_modules', 'font-awesome')
+var faPath = path.join(__dirname, 'node_modules', 'font-awesome');
+var threePath = path.join(__dirname, 'node_modules', 'three');
 app.use('/fonts', express.static(path.join(bootstrapPath, 'dist','fonts')));
 app.use('/fonts', express.static(path.join(faPath, 'fonts')));
 app.use('/js', express.static(path.join(bootstrapPath, 'dist', 'js')));
+app.use('/js', express.static(path.join(threePath)));
 app.use('/css', express.static(path.join(faPath, 'css')));
 
 app.use(require('less-middleware')(path.join(__dirname, 'public'), {
