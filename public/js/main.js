@@ -5,10 +5,14 @@ $(function () {
     var scene, camera, renderer;
     var geometry, material, mesh;
     var container, stats;
+    var dotEffect;
     var composer;
 
     var mouse = [.5, .5];
     zoom = 1000;
+
+    var audioContext;
+    var analyser;
 
     function init() {
 
@@ -17,7 +21,7 @@ $(function () {
 
         scene = new THREE.Scene();
 
-        camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+        camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 1, 10000 );
         camera.position.z = 1000;
 
         var light = new THREE.DirectionalLight( 0xffffff );
@@ -36,7 +40,7 @@ $(function () {
         //scene.add(backMesh)
 
         var sphere = new THREE.Mesh(
-            new THREE.SphereGeometry(3000, 64, 64),
+            new THREE.SphereGeometry(8000, 64, 64),
             new THREE.MeshBasicMaterial({
                 map: THREE.ImageUtils.loadTexture('img/bathroomSquare2048x2048.png')
             })
@@ -55,9 +59,9 @@ $(function () {
         composer = new THREE.EffectComposer( renderer );
         composer.addPass( new THREE.RenderPass( scene, camera ) );
 
-        //var effect = new THREE.ShaderPass( THREE.DotScreenShader );
-        //effect.uniforms[ 'scale' ].value = 99;
-        //composer.addPass( effect );
+        dotEffect = new THREE.ShaderPass( THREE.DotScreenShader );
+        dotEffect.uniforms[ 'scale' ].value = 99;
+        composer.addPass( dotEffect );
 
         var effect = new THREE.ShaderPass( THREE.RGBShiftShader );
         effect.uniforms[ 'amount' ].value = 0.0015;
@@ -95,6 +99,11 @@ $(function () {
         // note: three.js includes requestAnimationFrame shim
         requestAnimationFrame( animate );
 
+        var freqByteData = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteFrequencyData(freqByteData); //analyser.getByteTimeDomainData(freqByteData);
+        //console.log(freqByteData[52]);
+        dotEffect.uniforms[ 'scale' ].value = freqByteData[52];
+
         mesh.rotation.x += 0.01;
         mesh.rotation.y += 0.02;
 
@@ -103,6 +112,31 @@ $(function () {
         stats.update();
 
     }
+
+    function initAudio(){
+        var AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioContext = new AudioContext();
+        analyser = audioContext.createAnalyser();
+        var source;
+        var audio = new Audio();
+        audio.src = '/audio/notAtHome.mp3';
+        audio.controls = true;
+        audio.autoplay = true;
+        audio.loop = true;
+        source = audioContext.createMediaElementSource(audio);
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+
+        var currenTimeNode = document.querySelector('#current-time');
+        audio.addEventListener('timeupdate', function(e) {
+            var currTime = audio.currentTime;
+            currenTimeNode.textContent = parseInt(currTime / 60) + ':' + parseInt(currTime % 60);
+        }, false);
+
+        document.body.appendChild(audio);
+
+    }
+
 
 
     $('[data-toggle="popover"]').popover();
@@ -115,6 +149,11 @@ $(function () {
             $('#login-modal-footer-span').html('click the X above to close');
             //$('#login-modal').modal('hide');
         });
+
+
+
     init();
+    initAudio();
+
     animate();
 });
