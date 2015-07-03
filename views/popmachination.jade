@@ -1,0 +1,21 @@
+extends layout
+block content
+  div(id='threedee')
+    three
+  div(id='current-time')
+
+block specialscripts
+  script(src='/js/three.min.js')
+  script(src='/js/Detector.js')
+  script(src='/js/stats.min.js')
+
+  script(src='/js/shaders/CopyShader.js')
+  script(src='/js/shaders/DotScreenShader.js')
+  script(src='/js/shaders/RGBShiftShader.js')
+
+  script(src='/js/postprocessing/EffectComposer.js')
+  script(src='/js/postprocessing/RenderPass.js')
+  script(src='/js/postprocessing/MaskPass.js')
+  script(src='/js/postprocessing/ShaderPass.js')
+
+  script(src='/js/video.js')
