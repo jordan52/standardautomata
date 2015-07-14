@@ -9,4 +9,8 @@ router.get('/', function(req, res, next) {
 router.get('/popmachination.html', function(req, res, next) {
     res.render('popmachination', { title: 'Standard Automata' });
 });
+
+router.get('/sphere.html', function(req, res, next) {
+    res.render('sphere', { title: 'Standard Automata' });
+});
 module.exports = router;
