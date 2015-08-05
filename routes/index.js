@@ -13,4 +13,8 @@ router.get('/popmachination.html', function(req, res, next) {
 router.get('/sphere.html', function(req, res, next) {
     res.render('sphere', { title: 'Standard Automata' });
 });
+router.get('/dragJade.html', function(req, res, next) {
+    res.render('drag', { title: 'Standard Automata' });
+});
+
 module.exports = router;

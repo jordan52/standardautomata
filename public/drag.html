@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head><title>Standard Automata</title>
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans&amp;amp;subset=latin">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+<body>
+<header role="navigation" class="navbar navbar-default sa-navbar bs-navbar">
+    <div class="container">
+
+    </div>
+</header>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div id="movie">movie</div>
+        </div>
+        <div class="col-md-4">
+            <div id="library" class="row-fluid">
+                <ul id="drag-elements">
+                    <li draggable="true">some text</li>
+                    <li draggable="true"><img class="libraryimage" src="/img/green.jpg"/></li>
+                    <li draggable="true"><img class="libraryimage" src="/img/blue.png"/></li>
+                    <li draggable="true"><img class="libraryimage" src="/img/yellow.png"/></li>
+                    <li draggable="true"><img class="libraryimage" src="/img/green.jpg"/></li>
+                    <li draggable="true"><img class="libraryimage" src="/img/blue.png"/></li>
+                    <li draggable="true"><img class="libraryimage" src="/img/yellow.png"/></li>
+                    <li draggable="true"><img class="libraryimage" src="/img/green.jpg"/></li>
+                    <li draggable="true"><img class="libraryimage" src="/img/blue.png"/></li>
+                    <li draggable="true"><img class="libraryimage" src="/img/yellow.png"/></li>
+                </ul>
+                <div id="drop"> drop. </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div id="timeline"></div>
+    </div>
+    <div class="row">
+        <div id='current-time'></div>
+        <div id="audio-controls"></div>
+    </div>
+    <div>
+        <ul>
+            <li>Drag n’ Drop instead of copy-pasta URL? This would require the GIF to be stored somewhere, right?</li>
+            <li>Can we alter the gifs to automatically fill a specific container? Say, the “video” is 700x400 - make sure they are at least one or the other?</li>
+            <li>Are we able to alter the gifs in anyway (e.g. transparency, color, etc.) ?</li>
+            <li>Should we limit input to HTML5 video links so we have those additional controls?</li>
+            <li>If I created some graphics, text, animations of my own, perhaps we can inject those into the video so there’s some controlled pieces within the user-submitted chaos?</li>
+        </ul>
+
+
+    </div>
+</div>
+<footer class="footer">
+    <p>This is the end
+        <span class="pull-right">
+            <span>© 2015 Standard Automata, Inc. - V 2.2.2r</span>
+        </span>
+    </p>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/drag.js"></script>
+<script>(function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m)
+})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+ga('create', 'UA-1512104-15', 'auto');
+ga('send', 'pageview');</script>
+</body>
+</html>
