@@ -136,7 +136,6 @@ var drawTimeline = function () {
     placeholder.className = 'timeplaceholder'
     placeholder.appendChild( document.createTextNode('drag here'));
 
-    //var placeholder = document.createTextNode('drag here');
     var frag = document.createDocumentFragment();
     for(var i = 0; i < ITEM_COUNT; i++){
 
@@ -149,10 +148,8 @@ var drawTimeline = function () {
                 libImage.src = video.items[i].img;
                 libItem.appendChild(libImage)
             } else {
-
                 libItem.appendChild(placeholder.cloneNode(true));
             }
-
         }
         addTimelineItemListeners(libItem);
 
