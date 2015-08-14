@@ -2,9 +2,9 @@ var ITEM_COUNT = 10;
 
 var library = {
     items: [
-        {img: '/img/green.jpg'},
-        {img: '/img/blue.png'},
-        {img: '/img/yellow.png'}
+        {id: 'xxyy1', img: '/img/green.jpg'},
+        {id: 'xxyy2', img: '/img/blue.png'},
+        {id: 'xxyy3', img: '/img/yellow.png'}
     ]
 };
 
@@ -53,19 +53,81 @@ window.onresize = function() {
     initAreas();
 }
 
+var addLibraryItemListeners = function (o) {
+    o.addEventListener('dragstart', function (e) {
+        e.dataTransfer.effectAllowed = 'copy';
+        e.dataTransfer.setData('id', this.id);
+
+    });
+    o.addEventListener('dragend', function (e) {
+
+    });
+}
 var initLibrary = function() {
-    var libElem = document.createElement("img");
-    libElem.className = 'libimage';
+    var libImg = document.createElement("img");
+    libImg.className = 'libimage';
+    var libItem = document.createElement("li");
+    libItem.className = 'libitem';
+    libItem.draggable = 'true';
     var frag = document.createDocumentFragment();
     for(var i = 0; i < library.items.length; i++){
-        var libItem = libElem.cloneNode();
-        libItem.src = library.items[i].img;
-        frag.appendChild(libItem);
+        var im = libImg.cloneNode();
+        im.src = library.items[i].img;
+        var li = libItem.cloneNode();
+        li.id = library.items[i].id;
+        li.appendChild(im);
+        frag.appendChild(li);
+        addLibraryItemListeners(li);
     }
     $('#library').append(frag);
+
 };
 
-var initTimeline = function () {
+var addTimelineItemListeners = function(o){
+    o.addEventListener('drop', function (e) {
+        if (e.preventDefault)e.preventDefault();
+        if (e.stopPropagation)e.stopPropagation();
+        var libId = e.dataTransfer.getData('id');
+
+        var collection = library.items;
+        var property = 'id';
+        var values = [libId];
+        var frank =  _.filter(collection, function(item) {
+            return _.contains(values, item[property]);
+        });
+
+        video.items[this.id.split('_')[1]].img = frank[0].img;
+
+        drawTimeline();
+
+        return false;
+    });
+    o.addEventListener('dragenter', function (e) {
+        //this.className = "slot over";
+        //console.log('got a dragenter')
+    });
+    o.addEventListener('dragleave', function (e) {
+        //this.className = "slot";
+        //console.log('got a dragleave')
+    });
+    o.addEventListener('dragover', function (e) {
+        if (e.preventDefault) {
+            e.preventDefault();
+        }
+
+        e.dataTransfer.dropEffect = 'copy';
+        //console.log('slot got a dragover');
+        return false;
+    });
+    o.addEventListener('click', function () {
+        console.log('got a click');
+        video.items[this.id.split('_')[1]] = {};
+        drawTimeline();
+        return false;
+    });
+}
+
+var drawTimeline = function () {
     var img = document.createElement("img");
     img.className = 'timeimage';
     var item = document.createElement("div");
@@ -92,16 +154,17 @@ var initTimeline = function () {
             }
 
         }
+        addTimelineItemListeners(libItem);
 
 
         frag.appendChild(libItem);
     }
-    $('#timeline').append(frag);
+    $('#timeline').empty().append(frag);
     resizeTimeline();
 }
 
 $(function () {
     initAreas();
     initLibrary();
-    initTimeline();
+    drawTimeline();
 });
