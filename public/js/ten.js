@@ -163,8 +163,38 @@ var drawTimeline = function () {
     resizeTimeline();
 }
 
+var clockVideo = function(curSlot) {
+    console.log(curSlot);
+};
+
+var initAudio = function(){
+    var AudioContext = window.AudioContext || window.webkitAudioContext;
+    audioContext = new AudioContext();
+    analyser = audioContext.createAnalyser();
+    var source;
+    audio = new Audio();
+    audio.src = '/audio/notAtHome.mp3';
+    audio.controls = true;
+    audio.autoplay = false;
+    audio.loop = false;
+    source = audioContext.createMediaElementSource(audio);
+    source.connect(analyser);
+    analyser.connect(audioContext.destination);
+    var currenTimeNode = document.querySelector('#current-time');
+
+    audio.addEventListener('timeupdate', function(e) {
+        var currTime = audio.currentTime;
+        currenTimeNode.textContent = parseInt(currTime / 60) + ':' + parseInt(currTime % 60);
+        clockVideo(currTime);
+    }, false);
+
+    document.querySelector('#audio-controls').appendChild(audio);
+}
+
 $(function () {
     initAreas();
+    initAudio();
     initLibrary();
     drawTimeline();
+
 });
