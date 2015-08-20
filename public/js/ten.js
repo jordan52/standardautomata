@@ -188,7 +188,40 @@ var initAudio = function(){
     document.querySelector('#audio-controls').appendChild(audio);
 }
 
+var handleDropUrl = function(){
+    console.log($('#dropUrl').val());
+
+    var location = encodeURIComponent($('#dropUrl').val());
+
+    var img = $("<img />").attr('src', 'proxy/' + location + '/352/72.jpg')
+        .load(function() {
+            if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
+                alert('broken image!');
+            } else {
+                $("#something").append(img);
+            }
+        });
+    $('#movie').append(img);
+
+};
+
+var initDropUrl = function(){
+    $( "#dropUrl" ).on({
+        blur: function() {
+            if( this.value ) {
+                handleDropUrl();
+            }
+        },
+        keypress: function(event) {
+            if(event.which === 13){
+                $( "#dropUrl" ).blur();
+            }
+        }
+    });
+};
+
 $(function () {
+    initDropUrl();
     initAreas();
     initAudio();
     initLibrary();
