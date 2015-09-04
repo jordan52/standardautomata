@@ -7,7 +7,7 @@ var http    = require('http');
 var https   = require('https');
 var gm      = require('gm');
 var fs      = require('fs');
-var imageMagick = gm.subClass({imageMagick: true});
+//var imageMagick = gm.subClass({imageMagick: true});
 var uuid    = require('node-uuid');
 var _       = require('lodash-node');
 var path    = require('path');
@@ -132,7 +132,16 @@ router.get('/proxy/:url/:width/:height.:extension?', function (req, res, next) {
                         return res.status(404).send('Expected content type ' + mimeTypes.join(', ') + ', got ' + mimeType);
                     }
                     var id = uuid.v4();
+
+                    var os = fs.createWriteStream('./public/writable/'+id+'.jpg');
+
+                    response.pipe(os);
+                    var libEntry = {};
+                    libEntry['img'] = '/writable/'+id+'.jpg';
+                    libEntry['id'] = id + '.jpg';
+                    os.on('finish',function(){console.log('got here');return res.json(libEntry);});
                     // @see https://github.com/aheckmann/gm#constructor
+                    /*
                     imageMagick(response, 'image.' + extension)
                         .colorspace('RGB')
                         // @see http://www.imagemagick.org/Usage/thumbnails/#cut
@@ -144,11 +153,11 @@ router.get('/proxy/:url/:width/:height.:extension?', function (req, res, next) {
                             // Log errors in production.
                             stderr.pipe(process.stderr);
                             // @see http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Expiration.html
-                            /* res.writeHead(200, {
-                                'Content-Type': mimeType,
-                                'Cache-Control': 'max-age=10, public' // 10 sec
-                                //'Cache-Control': 'max-age=31536000, public', // 1 year
-                            }); */
+                            // res.writeHead(200, {
+                            //    'Content-Type': mimeType,
+                            //    'Cache-Control': 'max-age=10, public' // 10 sec
+                            //    //'Cache-Control': 'max-age=31536000, public', // 1 year
+                            //});
                             //stdout.pipe(res);
                             var os = fs.createWriteStream('./public/writable/'+id+'.jpg');
                             //stdout.pipe(res);
@@ -159,6 +168,7 @@ router.get('/proxy/:url/:width/:height.:extension?', function (req, res, next) {
 
                             os.on('finish',function(){console.log('got here');return res.json(libEntry);});
                         });
+            */
                 }).on('error', next);
 
             // Timeout after five seconds. Better luck next time.
