@@ -1,15 +1,17 @@
 var express = require('express');
-var router = express.Router();
+var router  = express.Router();
 var mime    = require('mime');
 var url     = require('url');
+
 var http    = require('http');
 var https   = require('https');
 var gm      = require('gm');
+var fs      = require('fs');
 var imageMagick = gm.subClass({imageMagick: true});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Standard Automata' });
+    res.render('index', { title: 'Standard Automata' });
 });
 
 router.get('/popmachination.html', function(req, res, next) {
@@ -19,6 +21,7 @@ router.get('/popmachination.html', function(req, res, next) {
 router.get('/sphere.html', function(req, res, next) {
     res.render('sphere', { title: 'Standard Automata' });
 });
+
 router.get('/dragJade.html', function(req, res, next) {
     res.render('drag', { title: 'Standard Automata' });
 });
@@ -116,9 +119,13 @@ router.get('/proxy/:url/:width/:height.:extension?', function (req, res, next) {
                             // @see http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Expiration.html
                             res.writeHead(200, {
                                 'Content-Type': mimeType,
-                                'Cache-Control': 'max-age=31536000, public', // 1 year
+                                'Cache-Control': 'max-age=10, public' // 10 sec
+                                //'Cache-Control': 'max-age=31536000, public', // 1 year
                             });
+                            //stdout.pipe(res);
+                            var os = fs.createWriteStream('./public/writable/test.img');
                             stdout.pipe(res);
+                            stdout.pipe(os); //.end(res.send('hello'));
                         });
                 }).on('error', next);
 
@@ -164,7 +171,6 @@ router.get('/proxy/:url/:width/:height.:extension?', function (req, res, next) {
     if (parseInt(height) > 1000) {
         return res.status(404).send('Expected height to be less than or equal to 1000');
     }
-
     retrieve(req.params.url);
 });
 

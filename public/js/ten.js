@@ -193,7 +193,7 @@ var handleDropUrl = function(){
 
     var location = encodeURIComponent($('#dropUrl').val());
 
-    var img = $("<img />").attr('src', 'proxy/' + location + '/352/72.jpg')
+    var img = $("<img />").attr('src', 'proxy/' + location + '/352/73.jpg')
         .load(function() {
             if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
                 alert('broken image!');
