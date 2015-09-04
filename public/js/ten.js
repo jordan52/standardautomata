@@ -24,6 +24,20 @@ var video = {
         {img: '/img/green.jpg'}
     ]
 };
+var opts = {
+    lines: 13 // The number of lines to draw
+    , length: 28 // The length of each line
+    , width: 14 // The line thickness
+    , radius: 42 // The radius of the inner circle
+    , scale: 1 // Scales overall size of the spinner
+    , corners: 1 // Corner roundness (0..1)
+    , color: '#f00' // #rgb or #rrggbb or array of colors
+    , opacity: 0.25 // Opacity of the lines
+    , rotate: 0 // The rotation offset
+    , direction: 1 // 1: clockwise, -1: counterclockwise
+    , speed: 1 // Rounds per second
+};
+var uploadSpinner = new Spinner(opts);
 
 var resizeTimeline = function () {
     $('.timeitem').height(($('#timeline').height()/2) - 3);
@@ -34,7 +48,6 @@ var initAreas = function(){
 
     var height = ($( window ).height()) - 50; //the 50 is an adjustment for dev
 
-    var half = (height / 2);
     var third = (height / 3);
     var sixth = (height / 6);
     var twelph = (height / 12);
@@ -170,6 +183,10 @@ var drawTimeline = function () {
 
 var clockVideo = function(curSlot) {
     console.log(curSlot);
+    var slot = Math.floor(Math.random() * (video.items.length));
+    var data = video.items[slot];
+    var img = $("<img />").attr('src', data.img);
+    $('#movie').empty().append(img);
 };
 
 var initAudio = function(){
@@ -201,17 +218,18 @@ var handleDropUrl = function(){
 
     var location = encodeURIComponent($('#dropUrl').val());
 
+    uploadSpinner.spin(document.querySelector('#drop'));
+
     $.getJSON('/proxy/' + location + '/352/73.jpg', function(data){
         addToLibrary(data);
-        console.log('appended to library ');
-        console.log(data);
 
-        var img = $("<img />").attr('src', data.img);
-        $('#movie').append(img);
+        $('#dropUrl').val('');
+        uploadSpinner.stop();
     });
 };
 
 var initDropUrl = function(){
+
     $( "#dropUrl" ).on({
         blur: function() {
             if( this.value ) {
@@ -227,10 +245,13 @@ var initDropUrl = function(){
 };
 
 $(function () {
+
     initDropUrl();
     initAreas();
     initAudio();
     initLibrary();
     drawTimeline();
+
+
 
 });
