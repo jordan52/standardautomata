@@ -8,6 +8,9 @@ var https   = require('https');
 var gm      = require('gm');
 var fs      = require('fs');
 var imageMagick = gm.subClass({imageMagick: true});
+var uuid    = require('node-uuid');
+var _       = require('lodash-node');
+var path    = require('path');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -24,6 +27,30 @@ router.get('/sphere.html', function(req, res, next) {
 
 router.get('/dragJade.html', function(req, res, next) {
     res.render('drag', { title: 'Standard Automata' });
+});
+
+router.get('/library', function(req, res, next){
+    var library = {};
+    var currentDir = './public/writable';
+    fs.readdir(currentDir, function (err, files) {
+        if (err) {
+            throw err;
+        }
+        var data = [];
+        files.forEach(function (file) {
+            try {
+                var isDirectory = fs.statSync(path.join(currentDir,file)).isDirectory();
+                if (!isDirectory) {
+                    data.push({ id : file, img: '/writable/'+file});
+                }
+            } catch(e) {
+                console.log(e);
+            }
+        });
+        data = _.sortBy(data, function(f) { return f.id });
+        library['items'] = data;
+        res.json(library);
+    });
 });
 
 whitelist = process.env.WHITELIST || []; // [/\.gov$/, /google\.com$/];
@@ -104,7 +131,7 @@ router.get('/proxy/:url/:width/:height.:extension?', function (req, res, next) {
                     if (mimeTypes.indexOf(mimeType) === -1) {
                         return res.status(404).send('Expected content type ' + mimeTypes.join(', ') + ', got ' + mimeType);
                     }
-
+                    var id = uuid.v4();
                     // @see https://github.com/aheckmann/gm#constructor
                     imageMagick(response, 'image.' + extension)
                         .colorspace('RGB')
@@ -117,15 +144,20 @@ router.get('/proxy/:url/:width/:height.:extension?', function (req, res, next) {
                             // Log errors in production.
                             stderr.pipe(process.stderr);
                             // @see http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Expiration.html
-                            res.writeHead(200, {
+                            /* res.writeHead(200, {
                                 'Content-Type': mimeType,
                                 'Cache-Control': 'max-age=10, public' // 10 sec
                                 //'Cache-Control': 'max-age=31536000, public', // 1 year
-                            });
+                            }); */
                             //stdout.pipe(res);
-                            var os = fs.createWriteStream('./public/writable/test.img');
-                            stdout.pipe(res);
-                            stdout.pipe(os); //.end(res.send('hello'));
+                            var os = fs.createWriteStream('./public/writable/'+id+'.jpg');
+                            //stdout.pipe(res);
+                            stdout.pipe(os);
+                            var libEntry = {};
+                            libEntry['img'] = '/writable/'+id+'.jpg';
+                            libEntry['id'] = id + '.jpg';
+
+                            os.on('finish',function(){console.log('got here');return res.json(libEntry);});
                         });
                 }).on('error', next);
 

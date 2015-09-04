@@ -63,24 +63,32 @@ var addLibraryItemListeners = function (o) {
 
     });
 }
-var initLibrary = function() {
-    var libImg = document.createElement("img");
-    libImg.className = 'libimage';
-    var libItem = document.createElement("li");
-    libItem.className = 'libitem';
-    libItem.draggable = 'true';
-    var frag = document.createDocumentFragment();
-    for(var i = 0; i < library.items.length; i++){
-        var im = libImg.cloneNode();
-        im.src = library.items[i].img;
-        var li = libItem.cloneNode();
-        li.id = library.items[i].id;
-        li.appendChild(im);
-        frag.appendChild(li);
-        addLibraryItemListeners(li);
-    }
-    $('#library').append(frag);
 
+var libImg = document.createElement("img");
+libImg.className = 'libimage';
+var libItem = document.createElement("li");
+libItem.className = 'libitem';
+libItem.draggable = 'true';
+
+var addToLibrary = function(item){
+    library.items.push(item);
+    var frag = document.createDocumentFragment();
+    var im = libImg.cloneNode();
+    im.src = item.img;
+    var li = libItem.cloneNode();
+    li.id = item.id;
+    li.appendChild(im);
+    frag.appendChild(li);
+    addLibraryItemListeners(li);
+    $('#library').append(frag);
+};
+
+var initLibrary = function() {
+    $.getJSON('/library', function(data){
+        for(i=0; i < data.items.length;i++) {
+            addToLibrary(data.items[i]);
+        }
+    });
 };
 
 var addTimelineItemListeners = function(o){
@@ -193,16 +201,14 @@ var handleDropUrl = function(){
 
     var location = encodeURIComponent($('#dropUrl').val());
 
-    var img = $("<img />").attr('src', 'proxy/' + location + '/352/73.jpg')
-        .load(function() {
-            if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
-                alert('broken image!');
-            } else {
-                $("#something").append(img);
-            }
-        });
-    $('#movie').append(img);
+    $.getJSON('/proxy/' + location + '/352/73.jpg', function(data){
+        addToLibrary(data);
+        console.log('appended to library ');
+        console.log(data);
 
+        var img = $("<img />").attr('src', data.img);
+        $('#movie').append(img);
+    });
 };
 
 var initDropUrl = function(){
