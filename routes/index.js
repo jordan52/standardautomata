@@ -66,13 +66,11 @@ mimeTypes = [
 // to get this to work you need imagemagic. can be installed on osx with brew install imagemagick
 // here's an example URI to get this thing fired off and working.
 // http://localhost:3000/proxy/http%3A%2F%2Fi.imgur.com%2FRAy04SU.jpg/352/72.jpg
-router.get('/proxy/:url/:width/:height.:extension?', function (req, res, next) {
+router.get('/proxy/:url', function (req, res, next) {
 
     //copied from https://github.com/jpmckinney/image-proxy/blob/master/lib/image-proxy.js
-    var width = req.params.width
-        , height = req.params.height
-        , extension = req.params.extension
-        , retrieve = function (remote) {
+    var extension,
+        retrieve = function (remote) {
             // @see http://nodejs.org/api/url.html#url_url
             var options = url.parse(remote);
             // @see https://github.com/substack/hyperquest
@@ -121,54 +119,23 @@ router.get('/proxy/:url/:width/:height.:extension?', function (req, res, next) {
                     // The image must be a valid content type.
                     // @see http://nodejs.org/api/http.html#http_request_headers
                     var mimeType;
-                    if (extension) {
-                        mimeType = mime.lookup(extension);
-                    }
-                    else {
-                        mimeType = (response.headers['content-type'] || '').replace(/;.*/, '');
-                        extension = mime.extension(mimeType);
-                    }
+
+                    mimeType = (response.headers['content-type'] || '').replace(/;.*/, '');
+                    extension = mime.extension(mimeType);
+
                     if (mimeTypes.indexOf(mimeType) === -1) {
                         return res.status(404).send('Expected content type ' + mimeTypes.join(', ') + ', got ' + mimeType);
                     }
                     var id = uuid.v4();
+                    var filename = id+'.'+extension;
 
-                    var os = fs.createWriteStream('./public/writable/'+id+'.jpg');
+                    var os = fs.createWriteStream('./public/writable/'+filename);
 
                     response.pipe(os);
                     var libEntry = {};
-                    libEntry['img'] = '/writable/'+id+'.jpg';
-                    libEntry['id'] = id + '.jpg';
-                    os.on('finish',function(){console.log('got here');return res.json(libEntry);});
-                    // @see https://github.com/aheckmann/gm#constructor
-                    /*
-                    imageMagick(response, 'image.' + extension)
-                        .colorspace('RGB')
-                        // @see http://www.imagemagick.org/Usage/thumbnails/#cut
-                        .resize(width, height + '^>')
-                        .gravity('Center') // faces are most often near the center
-                        .extent(width, height)
-                        .stream(function (err, stdout, stderr) {
-                            if (err) return next(err);
-                            // Log errors in production.
-                            stderr.pipe(process.stderr);
-                            // @see http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Expiration.html
-                            // res.writeHead(200, {
-                            //    'Content-Type': mimeType,
-                            //    'Cache-Control': 'max-age=10, public' // 10 sec
-                            //    //'Cache-Control': 'max-age=31536000, public', // 1 year
-                            //});
-                            //stdout.pipe(res);
-                            var os = fs.createWriteStream('./public/writable/'+id+'.jpg');
-                            //stdout.pipe(res);
-                            stdout.pipe(os);
-                            var libEntry = {};
-                            libEntry['img'] = '/writable/'+id+'.jpg';
-                            libEntry['id'] = id + '.jpg';
-
-                            os.on('finish',function(){console.log('got here');return res.json(libEntry);});
-                        });
-            */
+                    libEntry['img'] = '/writable/'+filename;
+                    libEntry['id'] = filename;
+                    os.on('finish',function(){return res.json(libEntry);});
                 }).on('error', next);
 
             // Timeout after five seconds. Better luck next time.
@@ -200,18 +167,6 @@ router.get('/proxy/:url/:width/:height.:extension?', function (req, res, next) {
                 return res.status(404).send('Expected URI host to be whitelisted');
             }
         }
-    }
-    if (isNaN(parseInt(width))) {
-        return res.status(404).send('Expected width to be an integer');
-    }
-    if (parseInt(width) > 1000) {
-        return res.status(404).send('Expected width to be less than or equal to 1000');
-    }
-    if (isNaN(parseInt(height))) {
-        return res.status(404).send('Expected height to be an integer');
-    }
-    if (parseInt(height) > 1000) {
-        return res.status(404).send('Expected height to be less than or equal to 1000');
     }
     retrieve(req.params.url);
 });

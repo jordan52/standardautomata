@@ -2,9 +2,6 @@ var ITEM_COUNT = 10;
 
 var library = {
     items: [
-        {id: 'xxyy1', img: '/img/green.jpg'},
-        {id: 'xxyy2', img: '/img/blue.png'},
-        {id: 'xxyy3', img: '/img/yellow.png'}
     ]
 };
 
@@ -12,15 +9,15 @@ var video = {
     name: 'a',
     user: 'willie',
     items: [
-        {img: '/img/green.jpg'},
-        {img: '/img/blue.png'},
+        {img: '/img/55d185b0-be17-42d6-8413-89fc091abcea.gif'},
+        {img: '/img/6bc8a55b-9272-48bd-b08e-85dc11e15ca6.gif'},
         {},
-        {img: '/img/green.jpg'},
-        {img: '/img/blue.png'},
+        {img: '/img/jimWalker.jpg'},
+        {img: '/img/55d185b0-be17-42d6-8413-89fc091abcea.gif'},
         {img: '/img/yellow.png'},
-        {img: '/img/green.jpg'},
-        {img: '/img/blue.png'},
-        {img: '/img/yellow.png'},
+        {img: '/img/55d185b0-be17-42d6-8413-89fc091abcea.gif'},
+        {img: '/img/sinkSquare1024x1024.png'},
+        {img: '/img/6bc8a55b-9272-48bd-b08e-85dc11e15ca6.gif'},
         {img: '/img/green.jpg'}
     ]
 };
@@ -185,7 +182,7 @@ var clockVideo = function(curSlot) {
     console.log(curSlot);
     var slot = Math.floor(Math.random() * (video.items.length));
     var data = video.items[slot];
-    var img = $("<img />").attr('src', data.img);
+    var img = $("<img />").attr('src', data.img).attr('class','videoImage');
     $('#movie').empty().append(img);
 };
 
@@ -220,7 +217,7 @@ var handleDropUrl = function(){
 
     uploadSpinner.spin(document.querySelector('#drop'));
 
-    $.getJSON('/proxy/' + location + '/352/73.jpg', function(data){
+    $.getJSON('/proxy/' + location , function(data){
         addToLibrary(data);
 
         $('#dropUrl').val('');
