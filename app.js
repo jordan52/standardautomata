@@ -8,7 +8,10 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+var videos = require('./videos/videos.js');
+
 var app = express();
+app.locals.persistDir = path.resolve(__dirname + '/persist');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -71,6 +74,9 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
+
+//this crawls the persist folder and sets up the videos module
+app.videos = videos(app)
 
 
 module.exports = app;

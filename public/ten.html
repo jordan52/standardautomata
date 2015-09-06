@@ -12,8 +12,11 @@
                 <div class="col-md-4">
                     <div class="row">
                         <div class="col-md-12">
-                            <div id="share">
-                                share
+                            <div id="share" class="form-inline">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="shareName" placeholder="type a name to share">
+                                </div>
+                                <button id="shareButton" class="btn btn-default">Share</button>
                             </div>
                         </div>
                     </div>
@@ -38,11 +41,17 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div id="controls">
                                 <span id="audio-controls"></span>
                                 <span id='current-time'>00:00</span>
                             </div>
+                        </div>
+                        <div class="col-md-3">
+                            <select id="videoSelector"></select>
+                        </div>
+                        <div class="col-md-3">
+
                         </div>
                     </div>
                     <div class="row">

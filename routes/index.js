@@ -29,6 +29,20 @@ router.get('/dragJade.html', function(req, res, next) {
     res.render('drag', { title: 'Standard Automata' });
 });
 
+router.get('/videos', function(req, res, next) {
+    return res.json(req.app.videos.getAllVideos());
+});
+router.get('/videos/:name', function(req, res, next) {
+    var name = req.param('name');
+    return res.json(req.app.videos.getVideoByName(name));
+});
+router.get('/videonames', function(req, res, next) {
+    return res.json(req.app.videos.getVideoNames());
+});
+router.post('/videoshare', function(req, res, next){
+    req.app.videos.saveVideo(req.body);
+    res.send(200);
+});
 router.get('/library', function(req, res, next){
     var library = {};
     var currentDir = './public/writable';

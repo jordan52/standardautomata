@@ -5,22 +5,8 @@ var library = {
     ]
 };
 
-var video = {
-    name: 'a',
-    user: 'willie',
-    items: [
-        {img: '/img/55d185b0-be17-42d6-8413-89fc091abcea.gif'},
-        {img: '/img/6bc8a55b-9272-48bd-b08e-85dc11e15ca6.gif'},
-        {},
-        {img: '/img/jimWalker.jpg'},
-        {img: '/img/55d185b0-be17-42d6-8413-89fc091abcea.gif'},
-        {img: '/img/yellow.png'},
-        {img: '/img/55d185b0-be17-42d6-8413-89fc091abcea.gif'},
-        {img: '/img/sinkSquare1024x1024.png'},
-        {img: '/img/6bc8a55b-9272-48bd-b08e-85dc11e15ca6.gif'},
-        {img: '/img/green.jpg'}
-    ]
-};
+var video = {};
+
 var opts = {
     lines: 13 // The number of lines to draw
     , length: 28 // The length of each line
@@ -100,6 +86,31 @@ var initLibrary = function() {
         }
     });
 };
+
+var initVideo = function(name) {
+    $.getJSON('/videos/' + name, function(data){
+        video = data;
+        drawTimeline();
+    });
+};
+
+var initVideoSelector = function(init) {
+    $('#videoSelector').on('change', function(){
+        initVideo($( "#videoSelector option:selected").text());
+        return false;
+    });
+    $.getJSON('/videonames', function(data){
+        //$('#videoSelector').clear();
+        for(var i = 0 ; i < data.length; i++){
+            $('#videoSelector').append($('<option>').text(data[i]).attr('value', data[i]));
+        }
+        if(init){
+            $('#videoSelector').val(init);
+            initVideo(init);
+        }
+    });
+};
+
 
 var addTimelineItemListeners = function(o){
     o.addEventListener('drop', function (e) {
@@ -241,13 +252,30 @@ var initDropUrl = function(){
     });
 };
 
+var initShare = function(){
+    $('#shareButton').on('click', function(){
+        var name = $('#shareName').val();
+        video.name = name;
+        $.ajax({
+            type: 'POST',
+            url: '/videoshare',
+            data: JSON.stringify(video),
+            success: function(data) {initVideoSelector(name); },
+            contentType: "application/json"
+        });
+    });
+};
+
 $(function () {
 
     initDropUrl();
     initAreas();
     initAudio();
+    //initVideo("default");
     initLibrary();
-    drawTimeline();
+    initVideoSelector('default');
+    initShare();
+
 
 
 
