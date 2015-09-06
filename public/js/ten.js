@@ -100,7 +100,7 @@ var initVideoSelector = function(init) {
         return false;
     });
     $.getJSON('/videonames', function(data){
-        //$('#videoSelector').clear();
+        $('#videoSelector').empty();
         for(var i = 0 ; i < data.length; i++){
             $('#videoSelector').append($('<option>').text(data[i]).attr('value', data[i]));
         }
