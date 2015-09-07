@@ -22,6 +22,12 @@ var opts = {
 };
 var uploadSpinner = new Spinner(opts);
 
+var getParameterByName = function(name) {
+    var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
+
+
 var resizeTimeline = function () {
     $('.timeitem').height(($('#timeline').height()/2) - 3);
     $('.timeitem').width(($('#timeline').width() / 5) - 3);
@@ -273,7 +279,8 @@ $(function () {
     initAudio();
     //initVideo("default");
     initLibrary();
-    initVideoSelector('default');
+    var vName = getParameterByName('video');
+    initVideoSelector(vName? vName: 'default');
     initShare();
 
 
