@@ -43,6 +43,10 @@ router.post('/videoshare', function(req, res, next){
     req.app.videos.saveVideo(req.body);
     res.send(200);
 });
+router.post('/videocheckpoint', function(req, res, next){
+    req.app.videos.checkpoint();
+    res.send(200);
+});
 router.get('/library', function(req, res, next){
     var library = {};
     var currentDir = './public/writable';
